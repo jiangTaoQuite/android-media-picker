@@ -37,48 +37,12 @@ import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.utils.MessageUtils;
 import vn.tungdx.mediapicker.utils.RecursiveFileObserver;
 
-
-/**
- * @author TUNGDX
- */
-
-/**
- * Use this activity for pickup photos or videos (media).
- * <p/>
- * How to use:
- * <ul>
- * <li>
- * Step1: Open media picker: <br/>
- * - If using in activity use:
- * {@link MediaPickerActivity#open(Activity, int, MediaOptions)} or
- * {@link MediaPickerActivity#open(Activity, int)}</li>
- * - If using in fragment use:
- * {@link MediaPickerActivity#open(Fragment, int, MediaOptions)} or
- * {@link MediaPickerActivity#open(Fragment, int)} <br/>
- * </li>
- * <li>
- * Step2: Get out media that selected in
- * {@link Activity#onActivityResult(int, int, Intent)} of activity or fragment
- * that open media picker. Use
- * {@link MediaPickerActivity#getMediaItemSelected(Intent)} to get out media
- * list that selected.</li>
- * <p/>
- * <i>Note: Videos or photos return back depends on {@link MediaOptions} passed
- * to {@link #open(Activity, int, MediaOptions)} </i></li>
- * </ul>
- */
 public class MediaPickerActivity extends AppCompatActivity implements
         MediaSelectedListener, CropListener, FragmentManager.OnBackStackChangedListener, FragmentHost {
     private static final String TAG = "MediaPickerActivity";
 
     public static final String EXTRA_MEDIA_OPTIONS = "extra_media_options";
-    /**
-     * Intent extra included when return back data in
-     * {@link Activity#onActivityResult(int, int, Intent)} of activity or fragment
-     * that open media picker. Always return {@link ArrayList} of
-     * {@link MediaItem}. You must always check null and size of this list
-     * before handle your logic.
-     */
+
     public static final String EXTRA_MEDIA_SELECTED = "extra_media_selected";
     private static final int REQUEST_PHOTO_CAPTURE = 100;
     private static final int REQUEST_VIDEO_CAPTURE = 200;
@@ -96,14 +60,6 @@ public class MediaPickerActivity extends AppCompatActivity implements
     private RecursiveFileObserver mFileObserver;
     private FileObserverTask mFileObserverTask;
 
-    /**
-     * Start {@link MediaPickerActivity} in {@link Activity} to pick photo or
-     * video that depends on {@link MediaOptions} passed.
-     *
-     * @param activity
-     * @param requestCode
-     * @param options
-     */
     public static void open(Activity activity, int requestCode,
                             MediaOptions options) {
         Intent intent = new Intent(activity, MediaPickerActivity.class);
@@ -111,25 +67,10 @@ public class MediaPickerActivity extends AppCompatActivity implements
         activity.startActivityForResult(intent, requestCode);
     }
 
-    /**
-     * Start {@link MediaPickerActivity} in {@link Activity} with default media
-     * option: {@link MediaOptions#createDefault()}
-     *
-     * @param activity
-     * @param requestCode
-     */
     public static void open(Activity activity, int requestCode) {
         open(activity, requestCode, MediaOptions.createDefault());
     }
 
-    /**
-     * Start {@link MediaPickerActivity} in {@link Fragment} to pick photo or
-     * video that depends on {@link MediaOptions} passed.
-     *
-     * @param fragment
-     * @param requestCode
-     * @param options
-     */
     public static void open(Fragment fragment, int requestCode,
                             MediaOptions options) {
         Intent intent = new Intent(fragment.getActivity(),
@@ -138,13 +79,6 @@ public class MediaPickerActivity extends AppCompatActivity implements
         fragment.startActivityForResult(intent, requestCode);
     }
 
-    /**
-     * Start {@link MediaPickerActivity} in {@link Fragment} with default media
-     * option: {@link MediaOptions#createDefault()}
-     *
-     * @param fragment
-     * @param requestCode
-     */
     public static void open(Fragment fragment, int requestCode) {
         open(fragment, requestCode, MediaOptions.createDefault());
     }
@@ -394,11 +328,6 @@ public class MediaPickerActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * In some HTC devices (maybe others), duplicate image when captured with
-     * extra_output. This method will try delete duplicate image. It's prefer
-     * default image by camera than extra output.
-     */
     private void tryCorrectPhotoFileCaptured() {
         if (mPhotoFileCapture == null || mFilesCreatedWhileCapturePhoto == null
                 || mFilesCreatedWhileCapturePhoto.size() <= 0)
@@ -515,13 +444,6 @@ public class MediaPickerActivity extends AppCompatActivity implements
             mDone.setVisible(false);
     }
 
-    /**
-     * Check video duration valid or not with options.
-     *
-     * @param videoUri
-     * @return 1 if valid, otherwise is invalid. -2: not found, 0 larger than
-     * accepted, -1 smaller than accepted.
-     */
     private int checkValidVideo(Uri videoUri) {
         if (videoUri == null)
             return -2;
@@ -593,16 +515,6 @@ public class MediaPickerActivity extends AppCompatActivity implements
         errorDialog.show(getSupportFragmentManager(), null);
     }
 
-    /**
-     * Get media item list selected from intent extra included in
-     * {@link Activity#onActivityResult(int, int, Intent)} of activity or fragment
-     * that open media picker.
-     *
-     * @param intent In {@link Activity#onActivityResult(int, int, Intent)} method of
-     *               activity or fragment that open media picker.
-     * @return Always return {@link ArrayList} of {@link MediaItem}. You must
-     * always check null and size of this list before handle your logic.
-     */
     public static ArrayList<MediaItem> getMediaItemSelected(Intent intent) {
         if (intent == null)
             return null;

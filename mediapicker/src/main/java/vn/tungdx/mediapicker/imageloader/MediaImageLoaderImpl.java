@@ -14,9 +14,6 @@ import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import vn.tungdx.mediapicker.R;
 
-/**
- * @author TUNGDX
- */
 
 public class MediaImageLoaderImpl implements MediaImageLoader {
 

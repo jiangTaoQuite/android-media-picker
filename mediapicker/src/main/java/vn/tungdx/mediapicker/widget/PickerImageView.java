@@ -9,14 +9,6 @@ import android.widget.ImageView;
 import vn.tungdx.mediapicker.R;
 
 
-/**
- * @author TUNGDX
- */
-
-/**
- * Display thumbnail of video, photo and state when video, photo selected or
- * not.
- */
 public class PickerImageView extends ImageView {
     private Paint paintBorder;
 

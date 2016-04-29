@@ -7,9 +7,6 @@ import android.support.v4.app.Fragment;
 
 import vn.tungdx.mediapicker.imageloader.MediaImageLoader;
 
-/**
- * Created by TungDX
- */
 public class BaseFragment extends Fragment {
     protected Context mContext;
     protected MediaImageLoader mMediaImageLoader;

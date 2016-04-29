@@ -7,13 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-/**
- * Same {@link FileObserver} but support recursive in folder.
- */
 public class RecursiveFileObserver extends FileObserver {
-    /**
-     * Listener for event create file.
-     */
+
     public interface OnFileCreatedListener {
         public void onFileCreate(File file);
     }

@@ -14,27 +14,12 @@ import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.WrapperListAdapter;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-/**
- * <b>Refers from <a href=
- * "https://android.googlesource.com/platform/packages/apps/Gallery2/+/idea133/src/com/android/photos/views"
- * >Here</a>. But have been customized for support 2.3 version. See:
- * {@link HeaderGridView#getNumColumns()}</b> <br/>
- * <br/>
- * View.java A {@link GridView} that supports adding header rows in a very
- * similar way to {@link ListView}. See
- * {@link HeaderGridView#addHeaderView(View, Object, boolean)}
- */
 public class HeaderGridView extends GridView {
-    /**
-     * A class that represents a fixed view in a list, for example a header at
-     * the top or a footer at the bottom.
-     */
+
     private static class FixedViewInfo {
         /**
          * The view to add to the grid
@@ -88,19 +73,6 @@ public class HeaderGridView extends GridView {
         // Ignore, since the header rows depend on not being clipped
     }
 
-    /**
-     * Add a fixed view to appear at the top of the grid. If addHeaderView is
-     * called more than once, the views will appear in the order they were
-     * added. Views added using this call can take focus if they want.
-     * <p/>
-     * NOTE: Call this before calling setAdapter. This is so HeaderGridView can
-     * wrap the supplied cursor with one that will also account for header
-     * views.
-     *
-     * @param v            The view to add.
-     * @param data         Data to associate with this view
-     * @param isSelectable whether the item is selectable
-     */
     public void addHeaderView(View v, Object data, boolean isSelectable) {
         ListAdapter adapter = getAdapter();
         if (adapter != null && !(adapter instanceof HeaderViewGridAdapter)) {
@@ -122,17 +94,6 @@ public class HeaderGridView extends GridView {
         }
     }
 
-    /**
-     * Add a fixed view to appear at the top of the grid. If addHeaderView is
-     * called more than once, the views will appear in the order they were
-     * added. Views added using this call can take focus if they want.
-     * <p/>
-     * NOTE: Call this before calling setAdapter. This is so HeaderGridView can
-     * wrap the supplied cursor with one that will also account for header
-     * views.
-     *
-     * @param v The view to add.
-     */
     public void addHeaderView(View v) {
         addHeaderView(v, null, true);
     }
@@ -141,13 +102,6 @@ public class HeaderGridView extends GridView {
         return mHeaderViewInfos.size();
     }
 
-    /**
-     * Removes a previously-added header view.
-     *
-     * @param v The view to remove
-     * @return true if the view was removed, false if the view was not a header
-     * view
-     */
     public boolean removeHeaderView(View v) {
         if (mHeaderViewInfos.size() > 0) {
             boolean result = false;
@@ -173,9 +127,6 @@ public class HeaderGridView extends GridView {
         }
     }
 
-    /**
-     * @author TUNGDX
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public int getNumColumns() {
@@ -225,14 +176,6 @@ public class HeaderGridView extends GridView {
         }
     }
 
-    /**
-     * ListAdapter used when a HeaderGridView has header views. This ListAdapter
-     * wraps another one and also keeps track of the header views and their
-     * associated data objects.
-     * <p/>
-     * This is intended as a base class; you will probably not need to use this
-     * class directly in your own code.
-     */
     private static class HeaderViewGridAdapter implements WrapperListAdapter,
             Filterable {
         // This is used to notify the container of updates relating to number of

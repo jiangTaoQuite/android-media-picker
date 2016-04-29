@@ -30,13 +30,7 @@ import vn.tungdx.mediapicker.MediaOptions;
 import vn.tungdx.mediapicker.R;
 import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.utils.Utils;
-/**
- * @author TUNGDX
- */
 
-/**
- * For crop photo. Only crop one item at same time.
- */
 public class PhotoCropFragment extends BaseFragment implements OnClickListener {
   private static final String EXTRA_MEDIA_SELECTED = "extra_media_selected";
   private static final String EXTRA_MEDIA_OPTIONS = "extra_media_options";

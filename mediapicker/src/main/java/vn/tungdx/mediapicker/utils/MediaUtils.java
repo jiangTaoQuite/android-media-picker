@@ -1,6 +1,5 @@
 package vn.tungdx.mediapicker.utils;
 
-import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,20 +14,13 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video;
 import android.util.Log;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * @author TUNGDX
- */
 
-/**
- * Utility for Media Picker module.
- */
 public class MediaUtils {
     public static final String[] PROJECT_PHOTO = {MediaColumns._ID};
     public static final String[] PROJECT_VIDEO = {MediaColumns._ID};
@@ -46,12 +38,6 @@ public class MediaUtils {
         return Uri.withAppendedPath(uri, id);
     }
 
-    /**
-     * Create an default file for save image from camera.
-     *
-     * @return
-     * @throws IOException
-     */
     public static File createDefaultImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
@@ -81,9 +67,6 @@ public class MediaUtils {
         return id;
     }
 
-    // Should use
-    // this: (anwser 2)
-    // http://stackoverflow.com/questions/6390163/deleting-a-gallery-image-after-camera-intent-photo-taken
     public static String checkNull(Context context, int lastImageId,
                                    File fileCapture) {
         final String[] imageColumns = {Images.Media._ID,
@@ -146,13 +129,6 @@ public class MediaUtils {
         return false;
     }
 
-    /**
-     * Get path of image from uri
-     *
-     * @param contentResolver
-     * @param contentURI
-     * @return path of image. Null if not found.
-     */
     public static String getRealImagePathFromURI(ContentResolver contentResolver,
                                                  Uri contentURI) {
         Cursor cursor = contentResolver.query(contentURI, null, null, null,
@@ -171,13 +147,6 @@ public class MediaUtils {
         }
     }
 
-    /**
-     * Get path of video from uri
-     *
-     * @param contentResolver
-     * @param contentURI
-     * @return path of video. Null if not found.
-     */
     public static String getRealVideoPathFromURI(ContentResolver contentResolver,
                                                  Uri contentURI) {
         Cursor cursor = contentResolver.query(contentURI, null, null, null,
@@ -194,13 +163,6 @@ public class MediaUtils {
             }
         }
     }
-
-    /**
-     * Add file photo to gallery after capture from camera or downloaded.
-     *
-     * @param context
-     * @param file
-     */
     public static void galleryAddPic(Context context, File file) {
         Intent mediaScanIntent = new Intent(
                 Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -209,14 +171,6 @@ public class MediaUtils {
         context.sendBroadcast(mediaScanIntent);
     }
 
-    /**
-     * Get video's duration without {@link ContentProvider}. Because not know
-     * {@link Uri} of video.
-     *
-     * @param context
-     * @param path    Path of video file.
-     * @return Duration of video, in milliseconds. Return 0 if path is null.
-     */
     public static long getDuration(Context context, String path) {
         MediaPlayer mMediaPlayer = null;
         long duration = 0;
@@ -237,14 +191,6 @@ public class MediaUtils {
         return duration;
     }
 
-    /**
-     * Get video's duration from {@link ContentProvider}
-     *
-     * @param context
-     * @param uri     must has {@link Uri#getScheme()} equals
-     *                {@link ContentResolver#SCHEME_CONTENT}
-     * @return Duration of video, in milliseconds.
-     */
     public static long getDuration(Context context, Uri uri) {
         long duration = 0L;
         Cursor cursor = MediaStore.Video.query(context.getContentResolver(),

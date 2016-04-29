@@ -8,13 +8,6 @@ import android.support.v4.app.DialogFragment;
 
 import vn.tungdx.mediapicker.R;
 
-/**
- * @author TUNGDX
- */
-
-/**
- * Create dialog for media picker module. Should only use in this module.
- */
 public class MediaPickerErrorDialog extends DialogFragment {
     private String mMessage;
     private OnClickListener mOnPositionClickListener;

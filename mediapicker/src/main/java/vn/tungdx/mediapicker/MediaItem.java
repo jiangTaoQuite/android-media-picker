@@ -6,18 +6,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-
-import vn.tungdx.mediapicker.activities.MediaPickerActivity;
 import vn.tungdx.mediapicker.utils.MediaUtils;
 
-/**
- * @author TUNGDX
- */
-
-/**
- * Contains information of photo or video that selected and return back in
- * {@link MediaPickerActivity}
- */
 public class MediaItem implements Parcelable {
     public static final int PHOTO = 1;
     public static final int VIDEO = 2;
@@ -25,27 +15,15 @@ public class MediaItem implements Parcelable {
     private Uri uriCropped;
     private Uri uriOrigin;
 
-    /**
-     * @param mediaType Whether {@link #PHOTO} or {@link #VIDEO}
-     * @param uriOrigin {@link Uri} of media item.
-     */
     public MediaItem(int mediaType, Uri uriOrigin) {
         this.type = mediaType;
         this.uriOrigin = uriOrigin;
     }
 
-    /**
-     * @return type of media item. Whether {@link #PHOTO} or {@link #VIDEO}
-     */
     public int getType() {
         return type;
     }
 
-    /**
-     * Set type of media.
-     *
-     * @param type is {@link #PHOTO} or {@link #VIDEO}
-     */
     public void setType(int type) {
         this.type = type;
     }
@@ -156,18 +134,10 @@ public class MediaItem implements Parcelable {
                 + ", uriOrigin=" + uriOrigin + "]";
     }
 
-    /**
-     * @param context
-     * @return Path of origin file.
-     */
     public String getPathOrigin(Context context) {
         return getPathFromUri(context, uriOrigin);
     }
 
-    /**
-     * @param context
-     * @return Path of cropped file.
-     */
     public String getPathCropped(Context context) {
         return getPathFromUri(context, uriCropped);
     }

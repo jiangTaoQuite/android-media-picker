@@ -17,13 +17,6 @@ import vn.tungdx.mediapicker.imageloader.MediaImageLoader;
 import vn.tungdx.mediapicker.utils.MediaUtils;
 import vn.tungdx.mediapicker.widget.PickerImageView;
 
-/**
- * @author TUNGDX
- */
-
-/**
- * Adapter for display media item list.
- */
 public class MediaAdapter extends CursorAdapter implements RecyclerListener {
   private int mMediaType;
   private MediaImageLoader mMediaImageLoader;
@@ -92,12 +85,6 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     return mMediaListSelected.size() > 0;
   }
 
-  /**
-   * Check media uri is selected or not.
-   *
-   * @param uri Uri of media item (photo, video)
-   * @return true if selected, false otherwise.
-   */
   public boolean isSelected(Uri uri) {
     if (uri == null) return false;
     for (MediaItem item : mMediaListSelected) {
@@ -106,29 +93,15 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     return false;
   }
 
-  /**
-   * Check {@link MediaItem} is selected or not.
-   *
-   * @param item {@link MediaItem} to check.
-   * @return true if selected, false otherwise.
-   */
   public boolean isSelected(MediaItem item) {
     return mMediaListSelected.contains(item);
   }
 
-  /**
-   * Set {@link MediaItem} selected.
-   *
-   * @param item {@link MediaItem} to selected.
-   */
   public void setMediaSelected(MediaItem item) {
     syncMediaSelectedAsOptions();
     if (!mMediaListSelected.contains(item)) mMediaListSelected.add(item);
   }
 
-  /**
-   * set media not select
-   */
   public void setMediaNotSelected(MediaItem mediaItem, PickerImageView pickerImageView) {
     if (mMediaListSelected.contains(mediaItem)) {
       mMediaListSelected.remove(mediaItem);
@@ -137,11 +110,6 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     }
   }
 
-  /**
-   * If item selected then change to unselected and unselected to selected.
-   *
-   * @param item Item to update.
-   */
   public void updateMediaSelected(MediaItem item, PickerImageView pickerImageView) {
     if (mMediaListSelected.contains(item)) {
       mMediaListSelected.remove(item);
@@ -161,25 +129,14 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     }
   }
 
-  /**
-   * @return List of {@link MediaItem} selected.
-   */
   public List<MediaItem> getMediaSelectedList() {
     return mMediaListSelected;
   }
 
-  /**
-   * Set list of {@link MediaItem} selected.
-   */
   public void setMediaSelectedList(List<MediaItem> list) {
     mMediaListSelected = list;
   }
 
-  /**
-   * Whether clear or not media selected as options.
-   *
-   * @return true if clear, false otherwise.
-   */
   private boolean syncMediaSelectedAsOptions() {
     switch (mMediaType) {
       case MediaItem.PHOTO:
@@ -201,14 +158,10 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     return false;
   }
 
-  /**
-   * {@link MediaItem#VIDEO} or {@link MediaItem#PHOTO}
-   */
   public void setMediaType(int mediaType) {
     mMediaType = mediaType;
   }
 
-  // set numcols
   public void setNumColumns(int numColumns) {
     mNumColumns = numColumns;
   }
@@ -217,7 +170,6 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
     return mNumColumns;
   }
 
-  // set photo item height
   public void setItemHeight(int height) {
     if (height == mItemHeight) {
       return;

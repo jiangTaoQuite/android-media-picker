@@ -10,33 +10,6 @@ import java.util.List;
 
 import vn.tungdx.mediapicker.utils.MediaUtils;
 
-/**
- * @author TUNGDX
- */
-
-/**
- * Contains all options for pick one or many photos, videos. Defines:
- * <ul>
- * <li>Can select many photos or videos</li>
- * <li>Crop photo or not. Can set file to save photo cropped. Can set ratio to
- * crop.</li>
- * <li>Whether choose photo or video or both in picker.</li>
- * <li>Set max, min duration of video.</li>
- * <li>Set show warning before record video.</li>
- * </ul>
- * <p/>
- * Two methods to create instance :
- * <ul>
- * <li>
- * <code>new {@link MediaOptions.Builder}.
- * {@link Builder#canSelectMultiPhoto(boolean) canSelectMultiPhoto(boolean)}.
- * {@link Builder#setFixAspectRatio(boolean) setFixAspectRatio(boolean)}.
- * {@link Builder#setMaxVideoDuration(int) setMaxVideoDuration(int)}.{@link Builder#build()
- * build()}<code>
- * </li>
- * <li>or create default {@link #createDefault()}</li>
- * </ul>
- */
 public class MediaOptions implements Parcelable {
   private boolean canSelectMultiPhoto;
   private boolean canSelectMultiVideo;
@@ -94,16 +67,10 @@ public class MediaOptions implements Parcelable {
     return isCropped;
   }
 
-  /**
-   * @return in milliseconds.
-   */
   public int getMaxVideoDuration() {
     return maxVideoDuration;
   }
 
-  /**
-   * @return in milliseconds.
-   */
   public int getMinVideoDuration() {
     return minVideoDuration;
   }
@@ -142,21 +109,10 @@ public class MediaOptions implements Parcelable {
     this.showWarningVideoDuration = builder.showWarningBeforeRecord;
   }
 
-  /**
-   * Create default {@link MediaOptions} object.
-   * <p/>
-   * With options:
-   * <ul>
-   * <li>Only select 1 photo and not crop.</li>
-   * </ul>
-   */
   public static MediaOptions createDefault() {
     return new Builder().build();
   }
 
-  /**
-   * Builder for {@link MediaOptions}
-   */
   public static class Builder {
     private boolean canSelectMultiPhoto = false;
     private boolean canSelectMultiVideo = false;
