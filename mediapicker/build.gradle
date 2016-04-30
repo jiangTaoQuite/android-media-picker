@@ -5,7 +5,7 @@ publish {
     userOrg = 'kevinbas'
     groupId = 'com.kevinbas'
     artifactId = 'android-media-picker'
-    publishVersion = '0.0.1'
+    publishVersion = '1.0.0'
     desc = 'A library for choose photos, videos from Android devices.'
     website = 'https://github.com/jiangTaoQuite/android-media-picker'
 }
