@@ -38,7 +38,7 @@ MediaOptions.Builder builders2 = new MediaOptions.Builder();
 
 ## How do I use it?
 
-### Gradle
+### Maven
 ```xml
 <dependency>
   <groupId>com.kevinbas</groupId>
@@ -47,12 +47,12 @@ MediaOptions.Builder builders2 = new MediaOptions.Builder();
   <type>pom</type>
 </dependency>
 ```
-### Maven
+### Gradle
 ```xml
 compile 'com.kevinbas:android-media-picker:1.0.0'
 ```
 ## Note
-- If you must declare activity in AndroidManifest.xml
+- you must declare activity in AndroidManifest.xml
 
 ```xml
   <activity
