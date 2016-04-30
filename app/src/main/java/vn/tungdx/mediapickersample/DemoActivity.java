@@ -13,16 +13,13 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.io.File;
 import java.util.List;
 import java.util.Random;
-
-import vn.tungdx.mediapicker.MediaItem;
-import vn.tungdx.mediapicker.MediaOptions;
-import vn.tungdx.mediapicker.activities.MediaPickerActivity;
+import mediapicker.MediaItem;
+import mediapicker.MediaOptions;
+import mediapicker.activities.MediaPickerActivity;
 
 public class DemoActivity extends AppCompatActivity implements OnClickListener {
   private static final String TAG = "DemoActivity";
@@ -136,7 +133,7 @@ public class DemoActivity extends AppCompatActivity implements OnClickListener {
         options = builder.setIsCropped(true).setFixAspectRatio(true).setImageSize(1).build();
         break;
       case 13:
-        options = builder.canSelectMultiPhoto(true)
+        options = builder.canSelectMultiPhoto(false)
             .setMediaListSelected(mMediaSelectedList)
             .setImageSize(1)
             .build();
@@ -150,7 +147,7 @@ public class DemoActivity extends AppCompatActivity implements OnClickListener {
     }
     if (options != null) {
       clearImages();
-      MediaPickerActivity.open(this, REQUEST_MEDIA, options);
+      MediaPickerActivity.open(this, REQUEST_MEDIA, options,false);
     }
   }
 

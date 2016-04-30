@@ -1,15 +1,39 @@
-package vn.tungdx.mediapicker;
+package mediapicker;
 
-import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.tungdx.mediapicker.utils.MediaUtils;
+/**
+ * @author TUNGDX
+ */
 
+/**
+ * Contains all options for pick one or many photos, videos. Defines:
+ * <ul>
+ * <li>Can select many photos or videos</li>
+ * <li>Crop photo or not. Can set file to save photo cropped. Can set ratio to
+ * crop.</li>
+ * <li>Whether choose photo or video or both in picker.</li>
+ * <li>Set max, min duration of video.</li>
+ * <li>Set show warning before record video.</li>
+ * </ul>
+ * <p/>
+ * Two methods to create instance :
+ * <ul>
+ * <li>
+ * <code>new {@link MediaOptions.Builder}.
+ * {@link Builder#canSelectMultiPhoto(boolean) canSelectMultiPhoto(boolean)}.
+ * {@link Builder#setFixAspectRatio(boolean) setFixAspectRatio(boolean)}.
+ * {@link Builder#setMaxVideoDuration(int) setMaxVideoDuration(int)}.{@link Builder#build()
+ * build()}<code>
+ * </li>
+ * <li>or create default {@link #createDefault()}</li>
+ * </ul>
+ */
+// TODO: 4/12/2016 添加imageSize
 public class MediaOptions implements Parcelable {
   private boolean canSelectMultiPhoto;
   private boolean canSelectMultiVideo;
@@ -31,6 +55,10 @@ public class MediaOptions implements Parcelable {
     return showWarningVideoDuration;
   }
 
+  public int getImageSize() {
+    return imageSize;
+  }
+
   public List<MediaItem> getMediaListSelected() {
     return mediaListSelected;
   }
@@ -45,10 +73,6 @@ public class MediaOptions implements Parcelable {
 
   public int getAspectY() {
     return aspectY;
-  }
-
-  public int getImageSize() {
-    return imageSize;
   }
 
   public boolean isFixAspectRatio() {
@@ -67,10 +91,16 @@ public class MediaOptions implements Parcelable {
     return isCropped;
   }
 
+  /**
+   * @return in milliseconds.
+   */
   public int getMaxVideoDuration() {
     return maxVideoDuration;
   }
 
+  /**
+   * @return in milliseconds.
+   */
   public int getMinVideoDuration() {
     return minVideoDuration;
   }
@@ -109,10 +139,21 @@ public class MediaOptions implements Parcelable {
     this.showWarningVideoDuration = builder.showWarningBeforeRecord;
   }
 
+  /**
+   * Create default {@link MediaOptions} object.
+   * <p/>
+   * With options:
+   * <ul>
+   * <li>Only select 1 photo and not crop.</li>
+   * </ul>
+   */
   public static MediaOptions createDefault() {
     return new Builder().build();
   }
 
+  /**
+   * Builder for {@link MediaOptions}
+   */
   public static class Builder {
     private boolean canSelectMultiPhoto = false;
     private boolean canSelectMultiVideo = false;
@@ -156,15 +197,6 @@ public class MediaOptions implements Parcelable {
       return this;
     }
 
-    /**
-     * @param file Use for save image that cropped. Default image cropped
-     * saved in file that created by
-     * {@link Utils#createTempFile(android.content.Context)}
-     * <p/>
-     * <i>Note: file should not exist when pass to this method.
-     * Because if user cancels capture photo, this file will be
-     * temporary.</i>
-     */
     public Builder setCroppedFile(File croppedFile) {
       this.croppedFile = croppedFile;
       return this;
@@ -293,18 +325,6 @@ public class MediaOptions implements Parcelable {
       return this;
     }
 
-    /**
-     * @param file Use for save image that capture from camera. Default image
-     * saved in {@link Environment#DIRECTORY_PICTURES} folder of
-     * device, file create by
-     * {@link MediaUtils#createDefaultImageFile()}<br/>
-     * <b>Note:</b><br/>
-     * - File should not exist when pass to this method. Because
-     * if use cancle capture photo, this file will be temporary.<br/>
-     * - In HTC devices (maybe others) this options not true,
-     * image isn't saved in this file, it's saved by folder
-     * default of camera.
-     */
     public Builder setPhotoCaptureFile(File file) {
       photoFile = file;
       return this;
@@ -346,13 +366,13 @@ public class MediaOptions implements Parcelable {
   }
 
   public MediaOptions(Parcel in) {
-    canSelectMultiPhoto = in.readInt() != 0;
-    canSelectMultiVideo = in.readInt() != 0;
-    canSelectPhoto = in.readInt() != 0;
-    canSelectVideo = in.readInt() != 0;
-    isCropped = in.readInt() != 0;
-    fixAspectRatio = in.readInt() != 0;
-    showWarningVideoDuration = in.readInt() != 0;
+    canSelectMultiPhoto = in.readInt() == 0 ? false : true;
+    canSelectMultiVideo = in.readInt() == 0 ? false : true;
+    canSelectPhoto = in.readInt() == 0 ? false : true;
+    canSelectVideo = in.readInt() == 0 ? false : true;
+    isCropped = in.readInt() == 0 ? false : true;
+    fixAspectRatio = in.readInt() == 0 ? false : true;
+    showWarningVideoDuration = in.readInt() == 0 ? false : true;
     this.maxVideoDuration = in.readInt();
     this.minVideoDuration = in.readInt();
     aspectX = in.readInt();

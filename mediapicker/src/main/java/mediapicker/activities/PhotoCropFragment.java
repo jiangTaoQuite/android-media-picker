@@ -1,11 +1,11 @@
-package vn.tungdx.mediapicker.activities;
+package mediapicker.activities;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -16,21 +16,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
 import com.edmodo.cropper.CropImageView;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-
-import vn.tungdx.mediapicker.CropListener;
-import vn.tungdx.mediapicker.MediaItem;
-import vn.tungdx.mediapicker.MediaOptions;
+import mediapicker.CropListener;
+import mediapicker.MediaItem;
+import mediapicker.MediaOptions;
+import mediapicker.utils.MediaUtils;
+import mediapicker.utils.Utils;
 import vn.tungdx.mediapicker.R;
-import vn.tungdx.mediapicker.utils.MediaUtils;
-import vn.tungdx.mediapicker.utils.Utils;
 
+/**
+ * @author TUNGDX
+ */
+
+/**
+ * For crop photo. Only crop one item at same time.
+ */
 public class PhotoCropFragment extends BaseFragment implements OnClickListener {
   private static final String EXTRA_MEDIA_SELECTED = "extra_media_selected";
   private static final String EXTRA_MEDIA_OPTIONS = "extra_media_options";
@@ -116,28 +120,31 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
     }
     int width = getResources().getDisplayMetrics().widthPixels / 3 * 2;
     Bitmap bitmap = MediaUtils.decodeSampledBitmapFromFile(filePath, width, width);
+    //try {
+    // TODO
+    //ExifInterface exif = new ExifInterface(filePath);
+    //mCropImageView.setImageBitmap(bitmap, exif);
     mCropImageView.setImageBitmap(bitmap);
+    //} catch (IOException e) {
+    //    e.printStackTrace();
+    //}
   }
 
-  @Override public void onClick(View v) {
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB) @Override public void onClick(View v) {
     int i = v.getId();
     if (i == R.id.rotate_left) {// must catch exception, maybe bitmap in CropImage null
       try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          mCropImageView.setRotation(-90);
-        } else {
-          mCropImageView.rotateImage(-90);
-        }
+        mCropImageView.setRotation(-90);
+        // TODO
+        //mCropImageView.rotateImage(-90);
       } catch (Exception e) {
         e.printStackTrace();
       }
     } else if (i == R.id.rotate_right) {
       try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-          mCropImageView.setRotation(90);
-        } else {
-          mCropImageView.rotateImage(90);
-        }
+        mCropImageView.setRotation(90);
+        // TODO
+        //mCropImageView.setRotation(90);
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -145,11 +152,11 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
       getFragmentManager().popBackStack();
     } else if (i == R.id.save) {
       mSaveFileCroppedTask = new SaveFileCroppedTask(getActivity());
-      mSaveFileCroppedTask.execute();
-    } else {
+      mSaveFileCroppedTask.execute(mCropImageView.getCroppedImage());
     }
   }
 
+  // TODO: 4/7/2016 完成图片缩放
   private Uri saveBitmapCropped(Bitmap bitmap) {
     if (bitmap == null) return null;
     try {
@@ -169,7 +176,8 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
     return null;
   }
 
-  private class SaveFileCroppedTask extends AsyncTask<Void, Void, Uri> {
+  // TODO: 4/7/2016 异步任务 
+  private class SaveFileCroppedTask extends AsyncTask<Bitmap, Void, Uri> {
     private WeakReference<Activity> reference;
 
     public SaveFileCroppedTask(Activity activity) {
@@ -185,12 +193,12 @@ public class PhotoCropFragment extends BaseFragment implements OnClickListener {
       }
     }
 
-    @Override protected Uri doInBackground(Void... params) {
+    @Override protected Uri doInBackground(Bitmap... params) {
       Uri uri = null;
       // must try-catch, maybe getCroppedImage() method crash because not
       // set bitmap in mCropImageView
+      Bitmap bitmap = params[0];
       try {
-        Bitmap bitmap = mCropImageView.getCroppedImage();
         uri = saveBitmapCropped(bitmap);
         if (bitmap != null) {
           bitmap.recycle();

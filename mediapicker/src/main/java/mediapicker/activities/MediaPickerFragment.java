@@ -1,10 +1,11 @@
-package vn.tungdx.mediapicker.activities;
+package mediapicker.activities;
 
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video;
@@ -19,18 +20,28 @@ import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
-import vn.tungdx.mediapicker.MediaAdapter;
-import vn.tungdx.mediapicker.MediaItem;
-import vn.tungdx.mediapicker.MediaOptions;
-import vn.tungdx.mediapicker.MediaSelectedListener;
+import mediapicker.MediaAdapter;
+import mediapicker.MediaItem;
+import mediapicker.MediaOptions;
+import mediapicker.MediaSelectedListener;
+import mediapicker.utils.MediaUtils;
+import mediapicker.utils.Utils;
+import mediapicker.widget.HeaderGridView;
+import mediapicker.widget.PickerImageView;
 import vn.tungdx.mediapicker.R;
-import vn.tungdx.mediapicker.utils.MediaUtils;
-import vn.tungdx.mediapicker.utils.Utils;
-import vn.tungdx.mediapicker.widget.HeaderGridView;
-import vn.tungdx.mediapicker.widget.PickerImageView;
 
+/**
+ * @author TUNGDX
+ */
+
+/**
+ * Display list of videos, photos from {@link MediaStore} and select one or many
+ * item from list depends on {@link MediaOptions} that passed when open media
+ * picker.
+ */
 public class MediaPickerFragment extends BaseFragment
     implements LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
   private static final String LOADER_EXTRA_URI = "loader_extra_uri";
@@ -192,12 +203,14 @@ public class MediaPickerFragment extends BaseFragment
         uri = MediaUtils.getVideoUri((Cursor) object);
       }
       PickerImageView pickerImageView = (PickerImageView) view.findViewById(R.id.thumbnail);
+      //需要将参数传进来
       MediaItem mediaItem = new MediaItem(mMediaType, uri);
-      if (mMediaSelectedList.size() < (mMediaOptions.getImageSize() > 0
-          ? mMediaOptions.getImageSize() : 1)) {
+      if (mMediaSelectedList.size() < mMediaOptions.getImageSize()) {
         mMediaAdapter.updateMediaSelected(mediaItem, pickerImageView);
       } else {
         mMediaAdapter.setMediaNotSelected(mediaItem, pickerImageView);
+        Toast.makeText(getActivity(), "一次只能最多只能上传" + mMediaOptions.getImageSize() + "张照片哦",
+            Toast.LENGTH_LONG).show();
       }
       mMediaSelectedList = mMediaAdapter.getMediaSelectedList();
       if (mMediaAdapter.hasSelected()) {
