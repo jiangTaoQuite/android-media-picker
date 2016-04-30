@@ -8,10 +8,48 @@ Here are some of the features of the Android Media Picker Library:
 * 3) Options for pick video.
 * 4) Use with Activity or Fragment.
 
-**DEMO** https://youtu.be/R61a5quA0iQ
-<br/><a href="http://www.youtube.com/watch?feature=player_embedded&v=R61a5quA0iQ
-" target="_blank"><img src="http://img.youtube.com/vi/R61a5quA0iQ/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
-More details:
-http://robusttechhouse.com/android-media-picker-library-to-pick-photos-and-videos/
+## Code
+
+### Single image and select Cut
+
+```Java
+MediaOptions.Builder builders = new MediaOptions.Builder();
+        MediaOptions options =
+            builders.setIsCropped(true).setFixAspectRatio(true).setImageSize(1).build();
+        MediaPickerActivity.open(this, REQUEST_MEDIA, options, false);
+```
+### Select multiple pictures
+
+```Java
+  MediaOptions.Builder builder = new MediaOptions.Builder();
+        MediaOptions options1 =
+            builder.canSelectMultiPhoto(true).setMediaListSelected(items).setImageSize(9).build();
+        MediaPickerActivity.open(this, REQUEST_MEDIA, options1, false);
+```
+### Photographed and cut
+
+```Java
+MediaOptions.Builder builders2 = new MediaOptions.Builder();
+        MediaOptions options2 =
+            builders2.setIsCropped(true).setFixAspectRatio(true).setImageSize(1).build();
+        MediaPickerActivity.open(this, REQUEST_PHOTOGRAPH, options2, true);
+```
+
+## How do I use it?
+
+### Gradle
+```xml
+<dependency>
+  <groupId>com.kevinbas</groupId>
+  <artifactId>android-media-picker</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+### Maven
+```xml
+compile 'com.kevinbas:android-media-picker:1.0.0'
+```
+
+
