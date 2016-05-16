@@ -35,7 +35,6 @@ import mediapicker.utils.MessageUtils;
 import mediapicker.utils.RecursiveFileObserver;
 import vn.tungdx.mediapicker.R;
 
-
 public class MediaPickerActivity extends AppCompatActivity
     implements MediaSelectedListener, CropListener, FragmentManager.OnBackStackChangedListener,
     FragmentHost {
@@ -94,6 +93,14 @@ public class MediaPickerActivity extends AppCompatActivity
   public static void open(Fragment fragment, int requestCode, MediaOptions options) {
     Intent intent = new Intent(fragment.getActivity(), MediaPickerActivity.class);
     intent.putExtra(EXTRA_MEDIA_OPTIONS, options);
+    fragment.startActivityForResult(intent, requestCode);
+  }
+
+  public static void open(Fragment fragment, int requestCode, MediaOptions options,
+      boolean isTakePhoto) {
+    Intent intent = new Intent(fragment.getActivity(), MediaPickerActivity.class);
+    intent.putExtra(EXTRA_MEDIA_OPTIONS, options);
+    intent.putExtra(FLAG_IS_TAKE_PHOTO, isTakePhoto);
     fragment.startActivityForResult(intent, requestCode);
   }
 
