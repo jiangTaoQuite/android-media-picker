@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -120,9 +121,12 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
    *
    * @param item {@link MediaItem} to selected.
    */
-  public void setMediaSelected(MediaItem item) {
+  public void setMediaSelected(MediaItem item,PickerImageView pickerImageView) {
     syncMediaSelectedAsOptions();
-    if (!mMediaListSelected.contains(item)) mMediaListSelected.add(item);
+    if (!mMediaListSelected.contains(item))
+      mMediaListSelected.add(item);
+    pickerImageView.setSelected(true);
+    this.mPickerImageViewSelected.add(pickerImageView);
   }
 
   public void setMediaNotSelected(MediaItem mediaItem, PickerImageView pickerImageView) {
@@ -139,21 +143,24 @@ public class MediaAdapter extends CursorAdapter implements RecyclerListener {
    * @param item Item to update.
    */
   public void updateMediaSelected(MediaItem item, PickerImageView pickerImageView) {
-    if (mMediaListSelected.contains(item)) {
+    if (mMediaListSelected.contains(item))
+    {
       mMediaListSelected.remove(item);
       pickerImageView.setSelected(false);
       this.mPickerImageViewSelected.remove(pickerImageView);
-    } else {
+    } else
+    {
       boolean value = syncMediaSelectedAsOptions();
       if (value) {
         for (PickerImageView picker : this.mPickerImageViewSelected) {
           picker.setSelected(false);
         }
         this.mPickerImageViewSelected.clear();
+      }else {
+        mMediaListSelected.add(item);
+        pickerImageView.setSelected(true);
+        this.mPickerImageViewSelected.add(pickerImageView);
       }
-      mMediaListSelected.add(item);
-      pickerImageView.setSelected(true);
-      this.mPickerImageViewSelected.add(pickerImageView);
     }
   }
 

@@ -1,17 +1,24 @@
 package mediapicker.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +35,7 @@ import mediapicker.MediaItem;
 import mediapicker.MediaOptions;
 import mediapicker.MediaSelectedListener;
 import mediapicker.utils.MediaUtils;
+import mediapicker.utils.SnackBarUtil;
 import mediapicker.utils.Utils;
 import mediapicker.widget.HeaderGridView;
 import mediapicker.widget.PickerImageView;
@@ -49,6 +57,7 @@ public class MediaPickerFragment extends BaseFragment
   private static final String KEY_MEDIA_TYPE = "media_type";
   private static final String KEY_GRID_STATE = "grid_state";
   private static final String KEY_MEDIA_SELECTED_LIST = "media_selected_list";
+  private static final int REQUEST_CODE = 100;
 
   private HeaderGridView mGridView;
   private TextView mNoItemView;
@@ -87,6 +96,7 @@ public class MediaPickerFragment extends BaseFragment
       mSavedInstanceState = savedInstanceState;
     } else {
       mMediaOptions = getArguments().getParcelable(MediaPickerActivity.EXTRA_MEDIA_OPTIONS);
+      assert mMediaOptions != null;
       if (mMediaOptions.canSelectPhotoAndVideo() || mMediaOptions.canSelectPhoto()) {
         mMediaType = MediaItem.PHOTO;
       } else {
@@ -113,9 +123,33 @@ public class MediaPickerFragment extends BaseFragment
   @Override public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     if (mMediaType == MediaItem.PHOTO) {
-      requestPhotos(false);
+      requestPermission(false);
     } else {
       requestVideos(false);
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN) public void requestPermission(boolean isRestart) {
+    //判断当前Activity是否已经获得了该权限
+    String[] permissions =
+        { Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE };
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+          != PackageManager.PERMISSION_GRANTED) {
+
+        //如果App的权限申请曾经被用户拒绝过，就需要在这里跟用户做出解释
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            Manifest.permission.CAMERA)) {
+          SnackBarUtil.showText(getActivity(), "选择照片需要权限哦，请同意");
+        } else {
+          //进行权限请求
+          requestPermissions(permissions, REQUEST_CODE);
+        }
+      } else {
+        requestPhotos(isRestart);
+      }
+    } else {
+      requestPhotos(isRestart);
     }
   }
 
@@ -127,10 +161,15 @@ public class MediaPickerFragment extends BaseFragment
     requestMedia(Video.Media.EXTERNAL_CONTENT_URI, MediaUtils.PROJECT_VIDEO, isRestart);
   }
 
+  /**
+   * request media
+   * add android M Runtime Permission
+   */
   private void requestMedia(Uri uri, String[] projects, boolean isRestart) {
     Bundle bundle = new Bundle();
     bundle.putStringArray(LOADER_EXTRA_PROJECT, projects);
     bundle.putString(LOADER_EXTRA_URI, uri.toString());
+
     if (isRestart) {
       getLoaderManager().restartLoader(0, bundle, this);
     } else {
@@ -209,8 +248,10 @@ public class MediaPickerFragment extends BaseFragment
         mMediaAdapter.updateMediaSelected(mediaItem, pickerImageView);
       } else {
         mMediaAdapter.setMediaNotSelected(mediaItem, pickerImageView);
-        Toast.makeText(getActivity(), "一次只能最多只能上传" + mMediaOptions.getImageSize() + "张照片哦",
-            Toast.LENGTH_LONG).show();
+        if (mMediaSelectedList.size() >= mMediaOptions.getImageSize()) {
+          SnackBarUtil.showText(getActivity(),
+              "一次只能最多只能上传" + mMediaOptions.getImageSize() + "张照片哦");
+        }
       }
       mMediaSelectedList = mMediaAdapter.getMediaSelectedList();
       if (mMediaAdapter.hasSelected()) {
@@ -230,7 +271,7 @@ public class MediaPickerFragment extends BaseFragment
     }
     switch (mMediaType) {
       case MediaItem.PHOTO:
-        requestPhotos(true);
+        requestPermission(false);
         break;
       case MediaItem.VIDEO:
         requestVideos(true);
@@ -302,5 +343,16 @@ public class MediaPickerFragment extends BaseFragment
             }
           }
         });
+  }
+
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    // 如果请求被拒绝，那么通常grantResults数组为空
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      requestPhotos(true);
+    } else {
+      SnackBarUtil.showText(getActivity(), "你没有权限哦");
+      getActivity().finish();
+    }
   }
 }

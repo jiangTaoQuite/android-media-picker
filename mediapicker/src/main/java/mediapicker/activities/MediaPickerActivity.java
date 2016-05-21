@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -268,6 +269,9 @@ public class MediaPickerActivity extends AppCompatActivity
     }
   }
 
+  /**
+   * callback picker MediaItem
+   */
   private void returnBackData(List<MediaItem> mediaSelectedList) {
     Intent data = new Intent();
     data.putParcelableArrayListExtra(EXTRA_MEDIA_SELECTED,
@@ -276,6 +280,10 @@ public class MediaPickerActivity extends AppCompatActivity
     finish();
   }
 
+  /**
+   * take photo
+   */
+  // TODO: 16-5-22 can not to add MediaPickerFragment mMediaSelectedList
   private void takePhoto() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -395,8 +403,8 @@ public class MediaPickerActivity extends AppCompatActivity
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
     transaction.replace(R.id.container, fragment);
     // TODO BUGFIX
-    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-    //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+    //transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+    transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
     transaction.addToBackStack(null);
     transaction.commit();
   }
@@ -418,11 +426,14 @@ public class MediaPickerActivity extends AppCompatActivity
 
   public void syncActionbar() {
     Fragment fragment = getActivePage();
+    ActionBar bar = getSupportActionBar();
     if (fragment instanceof PhotoCropFragment) {
       hideAllOptionsMenu();
-      getSupportActionBar().hide();
+      assert bar != null;
+      bar.hide();
     } else if (fragment instanceof MediaPickerFragment) {
-      getSupportActionBar().show();
+      assert bar != null;
+      bar.show();
       syncMediaOptions();
       MediaPickerFragment pickerFragment = (MediaPickerFragment) fragment;
       syncIconMenu(pickerFragment.getMediaType());
