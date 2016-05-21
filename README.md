@@ -43,13 +43,13 @@ MediaOptions.Builder builders2 = new MediaOptions.Builder();
 <dependency>
   <groupId>com.kevinbas</groupId>
   <artifactId>android-media-picker</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <type>pom</type>
 </dependency>
 ```
 ### Gradle
 ```xml
-compile 'com.kevinbas:android-media-picker:1.0.0'
+compile 'com.kevinbas:android-media-picker:1.0.1'
 ```
 ## Note
 - you must declare activity in AndroidManifest.xml
@@ -60,6 +60,13 @@ compile 'com.kevinbas:android-media-picker:1.0.0'
             android:screenOrientation="portrait"
             android:theme="@style/MediaPickerTheme"/>
 ```
+
+## Update
+
+### Publish 1.0.1
+
+- add Android M Runtime Permission 
+- fix Picker photo information
 
 ## Thanks
 
