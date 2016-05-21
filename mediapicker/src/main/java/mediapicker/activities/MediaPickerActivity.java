@@ -36,10 +36,11 @@ import mediapicker.utils.MessageUtils;
 import mediapicker.utils.RecursiveFileObserver;
 import vn.tungdx.mediapicker.R;
 
-// TODO: 16-5-22 add takePhoto to MediaPickerFragment 
+// TODO: 16-5-22 add takePhoto to MediaPickerFragment
 public class MediaPickerActivity extends AppCompatActivity
     implements MediaSelectedListener, CropListener, FragmentManager.OnBackStackChangedListener,
     FragmentHost {
+  
   private static final String TAG = "MediaPickerActivity";
 
   public static final String EXTRA_MEDIA_OPTIONS = "extra_media_options";
