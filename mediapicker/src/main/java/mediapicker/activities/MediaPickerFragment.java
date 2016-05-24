@@ -1,14 +1,20 @@
 package mediapicker.activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.MediaColumns;
 import android.provider.MediaStore.Video;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -49,6 +55,7 @@ public class MediaPickerFragment extends BaseFragment
   private static final String KEY_MEDIA_TYPE = "media_type";
   private static final String KEY_GRID_STATE = "grid_state";
   private static final String KEY_MEDIA_SELECTED_LIST = "media_selected_list";
+  private static final int REQUEST_CODE = 100;
 
   private HeaderGridView mGridView;
   private TextView mNoItemView;
@@ -113,9 +120,45 @@ public class MediaPickerFragment extends BaseFragment
   @Override public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
     if (mMediaType == MediaItem.PHOTO) {
-      requestPhotos(false);
+      requestPermission(false);
     } else {
       requestVideos(false);
+    }
+  }
+
+
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN) public void requestPermission(boolean isRestart) {
+    //判断当前Activity是否已经获得了该权限
+    String[] permissions =
+        { Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE };
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+          != PackageManager.PERMISSION_GRANTED) {
+
+        //如果App的权限申请曾经被用户拒绝过，就需要在这里跟用户做出解释
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            Manifest.permission.CAMERA)) {
+          Toast.makeText(getActivity(), "选择照片需要权限哦，请同意",Toast.LENGTH_SHORT).show();
+        } else {
+          //进行权限请求
+          requestPermissions(permissions, REQUEST_CODE);
+        }
+      } else {
+        requestPhotos(isRestart);
+      }
+    } else {
+      requestPhotos(isRestart);
+    }
+  }
+
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    // 如果请求被拒绝，那么通常grantResults数组为空
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      requestPhotos(false);
+    } else {
+      Toast.makeText(getActivity(), "你没有权限哦",Toast.LENGTH_SHORT).show();
+      getActivity().finish();
     }
   }
 
@@ -209,8 +252,10 @@ public class MediaPickerFragment extends BaseFragment
         mMediaAdapter.updateMediaSelected(mediaItem, pickerImageView);
       } else {
         mMediaAdapter.setMediaNotSelected(mediaItem, pickerImageView);
-        Toast.makeText(getActivity(), "一次只能最多只能上传" + mMediaOptions.getImageSize() + "张照片哦",
-            Toast.LENGTH_LONG).show();
+        if (mMediaSelectedList.size() >= mMediaOptions.getImageSize()) {
+          Toast.makeText(getActivity(), "一次只能最多只能上传" + mMediaOptions.getImageSize() + "张照片哦",
+              Toast.LENGTH_SHORT).show();
+        }
       }
       mMediaSelectedList = mMediaAdapter.getMediaSelectedList();
       if (mMediaAdapter.hasSelected()) {
@@ -230,7 +275,7 @@ public class MediaPickerFragment extends BaseFragment
     }
     switch (mMediaType) {
       case MediaItem.PHOTO:
-        requestPhotos(true);
+        requestPermission(true);
         break;
       case MediaItem.VIDEO:
         requestVideos(true);
