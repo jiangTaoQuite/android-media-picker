@@ -126,7 +126,6 @@ public class MediaPickerFragment extends BaseFragment
     }
   }
 
-
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN) public void requestPermission(boolean isRestart) {
     //判断当前Activity是否已经获得了该权限
     String[] permissions =
@@ -138,7 +137,7 @@ public class MediaPickerFragment extends BaseFragment
         //如果App的权限申请曾经被用户拒绝过，就需要在这里跟用户做出解释
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
             Manifest.permission.CAMERA)) {
-          Toast.makeText(getActivity(), "选择照片需要权限哦，请同意",Toast.LENGTH_SHORT).show();
+          Toast.makeText(getActivity(), "选择照片需要权限哦，请同意", Toast.LENGTH_SHORT).show();
         } else {
           //进行权限请求
           requestPermissions(permissions, REQUEST_CODE);
@@ -157,7 +156,7 @@ public class MediaPickerFragment extends BaseFragment
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
       requestPhotos(false);
     } else {
-      Toast.makeText(getActivity(), "你没有权限哦",Toast.LENGTH_SHORT).show();
+      Toast.makeText(getActivity(), "你没有权限哦", Toast.LENGTH_SHORT).show();
       getActivity().finish();
     }
   }
