@@ -18,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,6 @@ import mediapicker.MediaItem;
 import mediapicker.MediaOptions;
 import mediapicker.MediaSelectedListener;
 import mediapicker.utils.MediaUtils;
-import mediapicker.utils.SnackBarUtil;
 import mediapicker.utils.Utils;
 import mediapicker.widget.HeaderGridView;
 import mediapicker.widget.PickerImageView;
@@ -140,7 +138,7 @@ public class MediaPickerFragment extends BaseFragment
         //如果App的权限申请曾经被用户拒绝过，就需要在这里跟用户做出解释
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
             Manifest.permission.CAMERA)) {
-          SnackBarUtil.showText(getActivity(), "选择照片需要权限哦，请同意");
+          Toast.makeText(getActivity(), "选择照片需要权限哦，请同意", Toast.LENGTH_SHORT).show();
         } else {
           //进行权限请求
           requestPermissions(permissions, REQUEST_CODE);
@@ -150,6 +148,17 @@ public class MediaPickerFragment extends BaseFragment
       }
     } else {
       requestPhotos(isRestart);
+    }
+  }
+
+  @Override public void onRequestPermissionsResult
+      (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    // 如果请求被拒绝，那么通常grantResults数组为空
+    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+      requestPhotos(false);
+    } else {
+      Toast.makeText(getActivity(), "你没有权限哦", Toast.LENGTH_SHORT).show();
+      getActivity().finish();
     }
   }
 
@@ -249,8 +258,8 @@ public class MediaPickerFragment extends BaseFragment
       } else {
         mMediaAdapter.setMediaNotSelected(mediaItem, pickerImageView);
         if (mMediaSelectedList.size() >= mMediaOptions.getImageSize()) {
-          SnackBarUtil.showText(getActivity(),
-              "一次只能最多只能上传" + mMediaOptions.getImageSize() + "张照片哦");
+          Toast.makeText(getActivity(), "一次只能最多只能上传" + mMediaOptions.getImageSize() + "张照片哦",
+              Toast.LENGTH_SHORT).show();
         }
       }
       mMediaSelectedList = mMediaAdapter.getMediaSelectedList();
@@ -271,7 +280,7 @@ public class MediaPickerFragment extends BaseFragment
     }
     switch (mMediaType) {
       case MediaItem.PHOTO:
-        requestPermission(false);
+        requestPermission(true);
         break;
       case MediaItem.VIDEO:
         requestVideos(true);
@@ -343,16 +352,5 @@ public class MediaPickerFragment extends BaseFragment
             }
           }
         });
-  }
-
-  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-      @NonNull int[] grantResults) {
-    // 如果请求被拒绝，那么通常grantResults数组为空
-    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      requestPhotos(true);
-    } else {
-      SnackBarUtil.showText(getActivity(), "你没有权限哦");
-      getActivity().finish();
-    }
   }
 }
